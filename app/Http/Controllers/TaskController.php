@@ -12,7 +12,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::paginate(10)->onEachSide(1);
+        $tasks = Task::orderBy('is_completed', 'asc')
+            ->orderBy('deadline', 'asc')
+            ->paginate(10)
+            ->onEachSide(1);
 
         return view('tasks.index', [
             'tasks' => $tasks
@@ -45,7 +48,7 @@ class TaskController extends Controller
             'created_by' => $request->user()->id
         ]);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.index')->with('success', 'Tarefa criada com sucesso!');
     }
 
     /**
@@ -85,7 +88,7 @@ class TaskController extends Controller
             'is_completed' => $request->is_completed
         ]);
 
-        return redirect()->route('tasks.index')->with('success', 'Tarefa atualizada com sucesso!');;
+        return redirect()->route('tasks.index')->with('success', 'Tarefa editada com sucesso!');
     }
 
     /**
@@ -93,6 +96,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if ($task) {
+            $task->delete();
+            return response()->json(['success' => 'Tarefa excluída com sucesso!'], 201);
+        }
+
+        return response()->json(['error' => 'Tarefa não removida. Tente novamente!'], 400);
     }
+
 }

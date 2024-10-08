@@ -16,7 +16,7 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $deadline = fake()->dateTime()->format('d-m-Y H:i');
+        $deadline = fake()->dateTime();
 
         return [
             'title' => fake()->sentence(),
@@ -24,9 +24,11 @@ class TaskFactory extends Factory
             'is_completed' => fake()->boolean(),
             'created_by' => 1,
             'deadline' => $deadline,
-            'completed_at' => (strtotime($deadline) > time()) ? fake()->dateTime()->format('d-m-Y H:i') : null,
+            // Define 'completed_at' somente se a deadline já passou
+            'completed_at' => ($deadline < now()) ? fake()->dateTime() : null,
             'created_at' => now(),
             'updated_at' => now(),
         ];
     }
+
 }
