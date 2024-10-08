@@ -20,6 +20,11 @@ class Task extends Model
         'created_by',
     ];
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_task')->limit(2);
+    }
+
     public function getDeadlineAttribute()
     {
         return Carbon::parse($this->attributes['deadline']);

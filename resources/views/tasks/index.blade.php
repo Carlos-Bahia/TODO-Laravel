@@ -22,6 +22,7 @@
                         <tr class="text-nowrap a">
                             <th class="px-3 py-3">Título</th>
                             <th class="px-3 py-3">Descrição</th>
+                            <th class="px-3 py-3">Categorias</th>
                             <th class="px-3 py-3">Status</th>
                             <th class="px-3 py-3">Data de Entrega</th>
                             <th class="px-3 py-3">Ações</th>
@@ -32,6 +33,11 @@
                             <tr class="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-3 py-2">{{ $task->title }}</td>
                                 <td class="px-3 py-2">{{ $task->description }}</td>
+                                <td class="px-3 py-2">
+                                    @foreach($task->categories as $category)
+                                        <span class="text-nowrap">{{ $category->name }}</span> <br/>
+                                    @endforeach
+                                </td>
                                 @if($task->is_completed === 1)
                                     <td class="px-3 py-2">
                                         <span class="bg-green-500 text-white rounded-lg px-4 py-2">Finalizado</span>

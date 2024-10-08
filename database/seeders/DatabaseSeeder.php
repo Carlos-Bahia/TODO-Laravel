@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -22,6 +23,13 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now()
         ]);
 
-        Task::factory()->count(30)->create();
+        $categories = Category::factory()->count(10)->create();
+
+        $tasks = Task::factory()->count(30)->create();
+
+        foreach ($tasks as $task) {
+            $randomCategories = $categories->random(2);
+            $task->categories()->attach($randomCategories);
+        }
     }
 }
