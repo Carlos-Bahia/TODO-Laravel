@@ -18,7 +18,7 @@
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <form action="/tasks" method="POST">
-                        @csrf <!-- Include this line if you're using Laravel Blade -->
+                        @csrf
 
                         <div class="mb-4">
                             <label for="title" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Título</label>

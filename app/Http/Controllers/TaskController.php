@@ -61,7 +61,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('tasks.edit', [
+            'task' => $task
+        ]);
     }
 
     /**
@@ -69,7 +71,21 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline' => 'required|date',
+            'is_completed' => 'boolean',
+        ]);
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $request->deadline,
+            'is_completed' => $request->is_completed
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'Tarefa atualizada com sucesso!');;
     }
 
     /**

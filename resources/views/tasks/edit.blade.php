@@ -1,23 +1,57 @@
-<!-- resources/views/tasks/edit.blade.php -->
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <div class="w-full flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Editar Tarefas') }}
+            </h2>
 
-@section('content')
-    <div class="container">
-        <h1>Editar Tarefa</h1>
+            <h3 class="font-semibold text-x text-gray-800 dark:text-gray-200 leading-tight">
+                <a href="{{ route('tasks.index') }}" class="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600">
+                    Listar Tarefas
+                </a>
+            </h3>
+        </div>
+    </x-slot>
 
-        <form action="{{ route('tasks.update', $task) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="mb-3">
-                <label for="title" class="form-label">Título</label>
-                <input type="text" name="title" class="form-control" value="{{ $task->title }}" required>
+    <div class="py-12">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <form action="{{ route('tasks.update', $task) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="mb-4">
+                            <label for="title" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Título</label>
+                            <input type="text" id="title" name="title" value="{{ old('title', $task->title) }}" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" placeholder="Digite o título da tarefa">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Descrição</label>
+                            <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" placeholder="Digite a descrição da tarefa" rows="4">{{ old('description', $task->description) }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="deadline" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Prazo</label>
+                            <input type="datetime-local" value="{{ old('deadline', $task->deadline->format('Y-m-d\TH:i')) }}" id="deadline" name="deadline" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="is_completed" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Status</label>
+                            <select name="is_completed" id="is_completed" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="0" {{ $task->is_completed == 0 ? 'selected' : '' }}>Pendente</option>
+                                <option value="1" {{ $task->is_completed == 1 ? 'selected' : '' }}>Finalizado</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Atualizar Tarefa
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Descrição</label>
-                <textarea name="description" class="form-control">{{ $task->description }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Salvar</button>
-            <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Voltar</a>
-        </form>
+        </div>
     </div>
-@endsection
+</x-app-layout>
