@@ -48,6 +48,7 @@
 
                                 <td class="px-3 py-2">
                                     <a href="{{ route('tasks.edit', $task) }}" class="btn btn-warning text-blue-400">Editar</a>
+                                    <br/>
                                     <button type="button" class="btn btn-danger text-red-500" data-toggle="modal" data-target="#deleteModal" onclick="setDeleteFormAction('{{ route('tasks.destroy', $task) }}')">
                                         Deletar
                                     </button>
@@ -146,7 +147,6 @@
             }
         });
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
