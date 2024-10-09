@@ -33,9 +33,13 @@
                             <tr class="bg-white border-b text-center dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-3 py-2">{{ $task->title }}</td>
                                 <td class="px-3 py-2">{{ $task->description }}</td>
-                                <td class="px-3 py-2">
+                                <td class="px-3 py-5">
                                     @foreach($task->categories as $category)
-                                        <span class="text-nowrap">{{ $category->name }}</span> <br/>
+                                        @php
+                                            $lightColors = ['Pink', 'White', 'Yellow'];
+                                            $textColor = in_array($category->color, $lightColors) ? 'black' : 'white';
+                                        @endphp
+                                        <span class="text-nowrap text-white rounded-lg px-4 py-2 mb-2" style="background-color: {{ $category->color }}; color: {{ $textColor }}; ; width: 12em; display: block;">{{ $category->name }}</span>
                                     @endforeach
                                 </td>
                                 @if($task->is_completed === 1)
