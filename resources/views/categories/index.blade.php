@@ -59,4 +59,87 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de confirmação -->
+    <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-1/3">
+            <h5 class="text-lg font-bold mb-4">Confirmar Exclusão</h5>
+            <p>Você tem certeza que deseja excluir esta categoria?</p>
+            <div class="mt-4">
+                <button id="cancelButton" class="mr-2 px-4 py-2 bg-gray-300 rounded">Cancelar</button>
+                <form id="deleteForm" action="" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded">Deletar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function setDeleteFormAction(action) {
+            $('#deleteForm').attr('action', action);
+            $('#deleteModal').removeClass('hidden');
+        }
+
+        $('#cancelButton').on('click', function() {
+            $('#deleteModal').addClass('hidden');
+        });
+
+        $('#deleteForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(response) {
+                    localStorage.setItem('successMessage', response.success);
+                    location.reload();
+                },
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        localStorage.setItem('errorMessage', xhr.responseJSON.error);
+                    } else {
+                        localStorage.setItem('errorMessage', 'Ocorreu um erro ao tentar excluir a tarefa.');
+                    }
+                    location.reload();
+                }
+            });
+
+            $('#deleteModal').addClass('hidden');
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Mensagem de sucesso da sessão
+            @if (session('success'))
+            toastr.success('{{ session('success') }}');
+            @endif
+
+            // Mensagem de erro da sessão
+            @if (session('error'))
+            toastr.error('{{ session('error') }}');
+            @endif
+
+            // Captura mensagens de sucesso e erro do LocalStorage após a exclusão via AJAX
+            const successMessage = localStorage.getItem('successMessage');
+            const errorMessage = localStorage.getItem('errorMessage');
+
+            if (successMessage) {
+                toastr.success(successMessage);
+                localStorage.removeItem('successMessage');
+            }
+
+            if (errorMessage) {
+                toastr.error(errorMessage);
+                localStorage.removeItem('errorMessage');
+            }
+        });
+    </script>
 </x-app-layout>
