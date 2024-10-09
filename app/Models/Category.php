@@ -9,6 +9,13 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'color',
+        'created_for',
+    ];
+
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'category_task');

@@ -30,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -38,7 +38,32 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:20',
+            'description' => 'required|string',
+            'color' => 'required|string',
+        ]);
+
+        try {
+            $category = Category::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'color' => $request->color,
+                'created_for' => $request->user()->id,
+            ]);
+
+            return redirect()->route('categories.index');
+            
+        } catch (\Throwable $th) {
+
+            if ($th->getCode() === '23000') {
+
+                return back()->with('error', 'Já Existe uma Categoria com esse nome. Tente Novamente!');
+
+            } else {
+                return back()->with('error', 'Erro interno. Tente Novamente mais tarde!');
+            }
+        }
     }
 
     /**

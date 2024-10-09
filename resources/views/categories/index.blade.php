@@ -6,7 +6,7 @@
             </h2>
 
             <h3 class="font-semibold text-x text-gray-800 dark:text-gray-200 leading-tight">
-                <a href="{{ route('tasks.create') }}" class="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600">
+                <a href="{{ route('categories.create') }}" class="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600">
                     Criar Categoria
                 </a>
             </h3>
