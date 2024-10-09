@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,15 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        $user = auth()->user();
+
+        $categoriesAvaiable = Category::where('created_for', $user->id)
+                              ->orderBy('name', 'asc')
+                              ->get();
+
+        return view('tasks.create', [
+            'categories' => $categoriesAvaiable
+        ]);
     }
 
     /**
@@ -38,18 +47,28 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'deadline' => 'required|date',
+            'category-1' => 'required|exists:categories,id',
+            'category-2' => 'nullable|exists:categories,id',
         ]);
 
-        Task::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'deadline' => $request->deadline,
+        $task = Task::create([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'deadline' => $validatedData['deadline'],
             'created_by' => $request->user()->id
         ]);
+
+        $categoriesToSync = [$validatedData['category-1']];
+
+        if (!empty($validatedData['category-2'])) {
+            $categoriesToSync[] = $validatedData['category-2'];
+        }
+
+        $task->categories()->sync($categoriesToSync);
 
         return redirect()->route('tasks.index')->with('success', 'Tarefa criada com sucesso!');
     }
@@ -67,8 +86,16 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+
+        $user = auth()->user();
+
+        $categoriesAvaiable = Category::where('created_for', $user->id)
+            ->orderBy('name', 'asc')
+            ->get();
+
         return view('tasks.edit', [
-            'task' => $task
+            'task' => $task,
+            'categories' => $categoriesAvaiable
         ]);
     }
 
@@ -77,11 +104,13 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'deadline' => 'required|date',
             'is_completed' => 'boolean',
+            'category-1' => 'required|exists:categories,id',
+            'category-2' => 'nullable|exists:categories,id',
         ]);
 
         $task->update([
@@ -90,6 +119,14 @@ class TaskController extends Controller
             'deadline' => $request->deadline,
             'is_completed' => $request->is_completed
         ]);
+
+        $categoriesToSync = [$validatedData['category-1']];
+
+        if (!empty($validatedData['category-2'])) {
+            $categoriesToSync[] = $validatedData['category-2'];
+        }
+
+        $task->categories()->sync($categoriesToSync);
 
         return redirect()->route('tasks.index')->with('success', 'Tarefa editada com sucesso!');
     }
