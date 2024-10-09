@@ -18,7 +18,7 @@ class TaskController extends Controller
         $tasks = Task::where('created_by', $user->id)
             ->orderBy('is_completed', 'asc')
             ->orderBy('deadline', 'asc')
-            ->paginate(10)
+            ->paginate(6)
             ->onEachSide(1);
 
         return view('tasks.index', [

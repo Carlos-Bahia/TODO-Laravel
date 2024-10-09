@@ -53,7 +53,7 @@ class CategoryController extends Controller
             ]);
 
             return redirect()->route('categories.index');
-            
+
         } catch (\Throwable $th) {
 
             if ($th->getCode() === '23000') {
@@ -79,7 +79,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', [
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -87,7 +89,31 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:20',
+            'description' => 'required|string',
+            'color' => 'required|string',
+        ]);
+
+        try {
+            $category->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'color' => $request->color
+            ]);
+
+            return redirect()->route('categories.index');
+
+        } catch (\Throwable $th) {
+
+            if ($th->getCode() === '23000') {
+
+                return back()->with('error', 'Já Existe uma Categoria com esse nome. Tente Novamente!');
+
+            } else {
+                return back()->with('error', $th->getMessage());
+            }
+        }
     }
 
     /**
