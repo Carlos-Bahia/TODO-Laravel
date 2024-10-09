@@ -17,15 +17,15 @@
                     <div class="w-1/5 px-3 py-2 text-center bg-gray-300 dark:bg-gray-900 rounded-xl">
                         <span class="text-6xl">{{ $numPendingTasks }}</span>
                         <p class="text-sm">Total de Atividades Pendentes</p>
-                        <p class="text-xs text-gray-500">{{ number_format(($numPendingTasks/$numTasks ) * 100, 2)}}%</p>
+                        <p class="text-xs text-gray-500">{{ $numTasks ? number_format(($numPendingTasks/$numTasks ) * 100, 2) : 0}}%</p>
                     </div>
                     <div class="w-1/5 px-3 py-2 text-center bg-gray-300 dark:bg-gray-900 rounded-xl">
                         <span class="text-6xl">{{ $numCompleteTasks }}</span>
                         <p class="text-sm">Total de Atividades Concluídas</p>
-                        <p class="text-xs text-gray-500">{{ number_format(($numCompleteTasks/$numTasks ) * 100, 2)}}%</p>
+                        <p class="text-xs text-gray-500">{{ $numTasks ? number_format(($numCompleteTasks/$numTasks ) * 100, 2)  : 0}}%</p>
                     </div>
                     <div class="w-1/5 px-3 py-2 text-center bg-gray-300 dark:bg-gray-900 rounded-xl">
-                        <span class="text-6xl">{{ number_format(($numRightDeadlineTasks/$numTasks ) * 100, 2) }}%</span>
+                        <span class="text-6xl">{{ $numTasks ?  number_format(($numRightDeadlineTasks/$numTasks ) * 100, 2) : 0 }}%</span>
                         <p class="text-sm">Porcentagem de Atividades Concluídas no Prazo</p>
                     </div>
                 </div>

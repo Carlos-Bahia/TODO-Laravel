@@ -11,19 +11,22 @@ class DashboardController extends Controller
     public function index()
     {
 
+        $user = auth()->user();
+
         //BigNumbers
-        $numTasks = Task::query()->count();
+        $numTasks = Task::query()->where('created_by', $user->id)->count();
 
-        $onDeadline = Task::query()->where('is_completed', '0')->whereDate('deadline', '>', now())->count();
+        $onDeadline = Task::query()->where('created_by', $user->id)->where('is_completed', '0')->whereDate('deadline', '>', now())->count();
 
-        $numPendingTasks = Task::query()->where('is_completed', '0')->count();
+        $numPendingTasks = Task::query()->where('created_by', $user->id)->where('is_completed', '0')->count();
 
-        $numCompleteTasks = Task::query()->where('is_completed', '1')->count();
+        $numCompleteTasks = Task::query()->where('created_by', $user->id)->where('is_completed', '1')->count();
 
-        $numRightDeadlineTasks = Task::query()->whereColumn('completed_at', '<=', 'deadline')->count();
+        $numRightDeadlineTasks = Task::query()->where('created_by', $user->id)->whereColumn('completed_at', '<=', 'deadline')->count();
 
         // AnnualPerformance
         $annualPerformance = Task::selectRaw('YEAR(deadline) as year, COUNT(*) as total_tasks, SUM(is_completed) as completed_tasks')
+            ->where('created_by', $user->id)
             ->groupBy('year')
             ->having('year', '<=', now()->year)
             ->orderBy('year')
@@ -38,6 +41,7 @@ class DashboardController extends Controller
             ->select('categories.name', DB::raw('COUNT(category_task.task_id) as total_tasks'), DB::raw('SUM(tasks.is_completed) as completed_tasks'))
             ->join('category_task', 'categories.id', '=', 'category_task.category_id')
             ->join('tasks', 'category_task.task_id', '=', 'tasks.id')
+            ->where('created_by', $user->id)
             ->groupBy('categories.name')
             ->havingRaw('total_tasks > 0') // Certifique-se de que total_tasks é maior que 0
             ->orderByRaw('SUM(tasks.is_completed) / COUNT(category_task.task_id) DESC') // Ordena pela taxa de conclusão
