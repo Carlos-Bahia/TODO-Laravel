@@ -113,11 +113,20 @@ class TaskController extends Controller
             'category-2' => 'nullable|exists:categories,id',
         ]);
 
+        $taskSaved = Task::findOrFail($task->id);
+
+        if($request->is_completed != $taskSaved->is_completed) {
+            $completedAt = $request->is_completed ? now() : null;
+        } else {
+            $completedAt = $taskSaved->completed_at;
+        }
+
         $task->update([
             'title' => $request->title,
             'description' => $request->description,
             'deadline' => $request->deadline,
-            'is_completed' => $request->is_completed
+            'is_completed' => $request->is_completed,
+            'completed_at' => $completedAt
         ]);
 
         $categoriesToSync = [$validatedData['category-1']];

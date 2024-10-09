@@ -16,7 +16,7 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $deadline = fake()->dateTime();
+        $deadline = fake()->dateTimeBetween('2022-01-01', '2025-06-30');
 
         return [
             'title' => fake()->sentence(),

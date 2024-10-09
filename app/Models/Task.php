@@ -18,6 +18,7 @@ class Task extends Model
         'deadline',
         'is_completed',
         'created_by',
+        'completed_at'
     ];
 
     public function categories()
