@@ -10,7 +10,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $dates = ['deadline', 'completed_at'];
+    protected array $dates = ['deadline', 'completed_at'];
 
     protected $fillable = [
         'title',
@@ -26,12 +26,12 @@ class Task extends Model
         return $this->belongsToMany(Category::class, 'category_task')->limit(2);
     }
 
-    public function getDeadlineAttribute()
+    public function getDeadlineAttribute(): Carbon
     {
         return Carbon::parse($this->attributes['deadline']);
     }
 
-    public function getCompletedAtAttribute()
+    public function getCompletedAtAttribute(): Carbon
     {
         return Carbon::parse($this->attributes['completed_at']);
     }

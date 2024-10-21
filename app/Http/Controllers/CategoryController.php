@@ -45,7 +45,7 @@ class CategoryController extends Controller
         ]);
 
         try {
-            $category = Category::create([
+            Category::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'color' => $request->color,
